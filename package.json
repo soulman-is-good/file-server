@@ -1,0 +1,23 @@
+{
+  "name": "file-server",
+  "version": "0.0.2",
+  "description": "Nodejs file server for file uploading/manipulation",
+  "main": "app.js",
+  "scripts": {
+    "start": "nohup node app.js > /var/log/fileserver.log 2>&1 &",
+    "stop": "kill `ps afx | grep 'file-srv' | grep -v grep | awk '{print $1}'`",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soulman-is-good/file-server.git"
+  },
+  "author": "Maxim Savin <soulman.is.good@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "busboy": "^0.2.9",
+    "mime-db": "^1.7.0",
+    "mmmagic": "^0.3.13",
+    "serve-static": "^1.8.1"
+  }
+}
