@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "busboy": "^0.2.9",
+    "express": "^4.11.2",
     "mime-db": "^1.7.0",
     "mmmagic": "^0.3.13",
     "serve-static": "^1.8.1"
