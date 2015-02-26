@@ -4,11 +4,15 @@ process.title = "file-srv";
 
 var express = require('express'),
   app = express(),
+  path = require('path'),
   serveStatic = require('serve-static'),
   indexRoute = require('./routes/index'),
   urlRoute = require('./routes/url'),
   resizeRoute = require('./routes/resize'),
   fileHelper = require('./lib/fileserver');
+
+/** Limit values **/
+global.UPLOAD_DIR = process.env.FSRV_UPLOAD_DIR || path.join(__dirname, './uploads');
 
 app.disable('x-powered-by');
 app.use(serveStatic('uploads', {'index': false}));
@@ -17,6 +21,7 @@ app.use(fileHelper());
 app.get('/', indexRoute.get);
 app.post('/', indexRoute.post);
 app.get('/url/:url', urlRoute.get);
+app.get('/:size/:file', resizeRoute.get);
 //TODO: resizing app.get('/:width-:height/:modifier', resizeRoute.get);
 app.all('*', function(req, res, next){
   res.status(404);

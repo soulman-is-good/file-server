@@ -1,0 +1,97 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          file-server
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: File server
+### END INIT INFO
+
+DIR=`dirname "$PWD/$0"`
+
+cd $DIR
+
+start()
+{
+    PID=$(ps afx | grep -v "grep" | grep "file-srv" | awk '{print $1}' )
+    if [[ -z $PID ]]; then
+        node "$DIR/../cluster.js" > "$DIR/../logs/cluster.log" 2>&1 &
+        echo "Started..."
+    else
+        echo "Process is already running under $PID..."
+    fi
+}
+
+restart()
+{
+    PID=$(ps afx | grep -v "grep" | grep "file-clus" | awk '{print $1}')
+    if [[ ! -z $PID ]]; then
+        kill $PID
+    fi
+    node "$DIR/../cluster.js" > "$DIR/../logs/cluster.log" 2>&1 &
+    echo "Restarted..."
+}
+
+reload()
+{
+    PID=$(ps afx | grep -v "grep" | grep "file-srv" | awk '{print $1}')
+    if [[ ! -z $PID ]]; then
+        kill $PID
+        echo "Reloading..."
+    else
+        echo "Cluster is not running..."
+    fi
+}
+
+stop()
+{
+    PID=$(ps afx | grep -v "grep" | grep "file-clus" | awk '{print $1}')
+    if [[ ! -z $PID ]]; then
+        kill $PID
+        echo "Stopped..."
+    else
+        echo "Cluster is not running..."
+    fi
+}
+
+status()
+{
+    PID=$(ps afx | grep -v "grep" | grep "file-clus" | awk '{print $1}')
+    if [[ ! -z $PID ]]; then
+        echo "Cluster is running..."
+    else
+        echo "Cluster is not running..."
+    fi
+    PID=$(ps afx | grep -v "grep" | grep "file-srv" | awk '{print $1}')
+    if [[ ! -z $PID ]]; then
+        echo "Client is running..."
+    else
+        echo "Client is not running..."
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        restart
+        ;;
+    reload)
+        reload
+        ;;
+    status)
+        status
+        ;;
+    *)
+        echo "Usage: fileserver {start|stop|restart|reload|status}"
+        exit 3
+        ;;
+
+esac
+
+:
