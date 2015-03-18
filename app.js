@@ -20,8 +20,16 @@ app.use(fileHelper());
 app.get('/', indexRoute.get);
 app.post('/', indexRoute.post);
 app.get('/:file', function(req, res){
-  var file = req.params.file;
-  fs.createReadStream(UPLOAD_DIR + "/" + file).pipe(res);
+  var filename = req.params.file;
+  var file = UPLOAD_DIR + "/" + filename;
+  fs.exists(function(is){
+    if(is) {
+      fs.createReadStream(UPLOAD_DIR + "/" + file).pipe(res);
+    } else {
+      res.status(404);
+      res.json({error: "Not found"});
+    }
+  });
 });
 app.get('/url/:url', urlRoute.get);
 app.get('/:size/:file', resizeRoute.get);
