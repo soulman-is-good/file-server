@@ -7,7 +7,7 @@ exports.get = function (req, res, next) {
   var size = req.params.size;
   var file = req.params.file;
   console.log('Resizing', file, size, req.params);
-  if (/^[0-9]{2,4}x[0-9]{2,4}/.test(size) && file) {
+  if (/^[0-9]{2,4}x[0-9]{2,4}/.test(size) && fs.existsSync(UPLOAD_DIR + "/" + file)) {
     var magic, filename;
     filename = UPLOAD_DIR + "/" + size;
     try {
@@ -85,6 +85,6 @@ exports.get = function (req, res, next) {
     }
   } else {
     res.status(405);
-    res.json({error: "Size not supported"});
+    res.json({error: "Size or file not supported"});
   }
 };
