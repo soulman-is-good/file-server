@@ -24,7 +24,7 @@ app.get('/:file', function(req, res){
   var file = UPLOAD_DIR + "/" + filename;
   fs.exists(file, function(is){
     if(is) {
-      fs.createReadStream(UPLOAD_DIR + "/" + file).pipe(res);
+      fs.createReadStream(file).pipe(res);
     } else {
       res.status(404);
       res.json({error: "Not found"});
