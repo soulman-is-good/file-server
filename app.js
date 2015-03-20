@@ -22,7 +22,7 @@ app.post('/', indexRoute.post);
 app.get('/:file', function(req, res){
   var filename = req.params.file;
   var file = UPLOAD_DIR + "/" + filename;
-  fs.exists(function(is){
+  fs.exists(file, function(is){
     if(is) {
       fs.createReadStream(UPLOAD_DIR + "/" + file).pipe(res);
     } else {
