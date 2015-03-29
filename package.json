@@ -4,8 +4,8 @@
   "description": "Nodejs file server for file uploading/manipulation",
   "main": "app.js",
   "scripts": {
-    "start": "nohup node app.js > /var/log/fileserver.log 2>&1 &",
-    "stop": "kill `ps afx | grep 'file-srv' | grep -v grep | awk '{print $1}'`",
+    "start": "./scripts/fileserver start",
+    "stop": "./scripts/fileserver stop",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

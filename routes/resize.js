@@ -74,6 +74,8 @@ exports.get = function (req, res, next) {
       size = size.join('x');
       opts.resize = size;
       opts[mod] = true;
+      opts.unsharp = '0x1';
+      opts.support = '0.1';
       magic = new imagic(UPLOAD_DIR + "/" + file);
       magic.resize(opts).save(filename, function (err) {
         if (err) {
