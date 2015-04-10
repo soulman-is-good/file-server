@@ -8,6 +8,7 @@ var express = require('express'),
   fs = require('fs'),
   indexRoute = require('./routes/index'),
   urlRoute = require('./routes/url'),
+  statRoute = require('./routes/stat'),
   resizeRoute = require('./routes/resize'),
   fileHelper = require('./lib/fileserver');
 
@@ -32,6 +33,7 @@ app.get('/:file', function(req, res){
   });
 });
 app.get('/url/:url', urlRoute.get);
+app.get('/stat/:file', statRoute.get);
 app.get('/:size/:file', resizeRoute.get);
 //TODO: resizing app.get('/:width-:height/:modifier', resizeRoute.get);
 app.all('*', function(req, res, next){
