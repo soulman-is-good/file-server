@@ -23,6 +23,7 @@ exports.get = function (req, res, next) {
       var mod = size.length > 2 ? size.pop() : "s";
       var gravity = (parseInt(mod[1]) || 5) % 10;
       mod = mod[0];
+      size = size.join('x');
       switch (mod) {
         case "s":
           mod = "shrink";
@@ -34,8 +35,8 @@ exports.get = function (req, res, next) {
           mod = "fill";
           break;
         case "c":
-          opts.crop = true;
-          mod = "crop";
+          opts.crop = size;
+          mod = false;
           break;
         default:
           mod = "shrink";
@@ -71,11 +72,11 @@ exports.get = function (req, res, next) {
         default:
           gravity = "center";
       }
-      size = size.join('x');
       opts.resize = size;
-      opts[mod] = true;
+      mod && (opts[mod] = true);
       opts.unsharp = '0x1';
       opts.support = '0.1';
+      opts.gravity = gravity;
       magic = new imagic(UPLOAD_DIR + "/" + file);
       magic.resize(opts).save(filename, function (err) {
         if (err) {
