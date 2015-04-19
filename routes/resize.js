@@ -18,6 +18,16 @@ exports.get = function (req, res, next) {
     } catch (e) {
       return next(e);
     } finally {
+      if (fs.existsSync(filename)) {
+        var stat = fs.statSync(filename);
+        if (!req.headers['if-modified-since'] || new Date(req.headers['if-modified-since']).getTime() >= stat.mtime.getTime()) {
+          console.log('reading from file');
+          res.header("Cache-Control", "max-age=86400");
+          res.header("Last-Modified", stat.mtime.toUTCString());
+          fs.createReadStream(filename).pipe(res);
+          return;
+        }
+      }
       size = size.split('x');
       var opts = {};
       var mod = size.length > 2 ? size.pop() : "s";
@@ -36,7 +46,7 @@ exports.get = function (req, res, next) {
           break;
         case "c":
           opts.crop = size;
-          mod = false;
+          mod = "shrink";
           break;
         default:
           mod = "shrink";
@@ -82,6 +92,8 @@ exports.get = function (req, res, next) {
         if (err) {
           next(err);
         } else {
+          res.header("Cache-Control", "max-age=86400");
+          res.header("Last-Modified", new Date(Date.now() + 86400000).toUTCString());
           fs.createReadStream(filename).pipe(res);
         }
       });
