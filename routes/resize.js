@@ -18,7 +18,7 @@ exports.get = function (req, res, next) {
     } catch (e) {
       return next(e);
     } finally {
-      if (fs.existsSync(filename)) {
+      if (0 && fs.existsSync(filename)) {
         var stat = fs.statSync(filename);
         if (!req.headers['if-modified-since'] || new Date(req.headers['if-modified-since']).getTime() >= stat.mtime.getTime()) {
           console.log('reading from file');
@@ -30,10 +30,16 @@ exports.get = function (req, res, next) {
       }
       size = size.split('x');
       var opts = {};
-      var mod = size.length > 2 ? size.pop() : "s";
+      var scale = size.length === 4 ? (parseInt(size.pop()) || 1) / 100 : 1;
+      var mod = size.length === 3 ? size.pop() : "s";
       var gravity = (parseInt(mod[1]) || 5) % 10;
-      mod = mod[0];
+      var crop_size = size.join('x');
+      if (scale !== 1.00) {
+        size[0] = size[0] * scale;
+        size[1] = size[1] * scale;
+      }
       size = size.join('x');
+      mod = mod[0];
       switch (mod) {
         case "s":
           mod = "shrink";
@@ -44,31 +50,35 @@ exports.get = function (req, res, next) {
         case "f":
           mod = "fill";
           break;
-        case "c":
-          opts.crop = size;
+        case "e":
+          opts.crop = crop_size;
           mod = "shrink";
+          break;
+        case "c":
+          opts.crop = crop_size;
+          mod = "fill";
           break;
         default:
           mod = "shrink";
       }
       switch (gravity) {
         case 1:
-          gravity = "southwest";
+          gravity = "southeast";
           break;
         case 2:
           gravity = "south";
           break;
         case 3:
-          gravity = "southeast";
+          gravity = "southwest";
           break;
         case 4:
-          gravity = "west";
+          gravity = "east";
           break;
         case 5:
           gravity = "center";
           break;
         case 6:
-          gravity = "east";
+          gravity = "west";
           break;
         case 7:
           gravity = "northwest";
