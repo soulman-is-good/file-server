@@ -18,7 +18,7 @@ exports.get = function (req, res, next) {
     } catch (e) {
       return next(e);
     } finally {
-      if (0 && fs.existsSync(filename)) {
+      if (fs.existsSync(filename)) {
         var stat = fs.statSync(filename);
         if (!req.headers['if-modified-since'] || new Date(req.headers['if-modified-since']).getTime() >= stat.mtime.getTime()) {
           console.log('reading from file');
