@@ -13,6 +13,9 @@ exports.get = function (req, res, next) {
   res.end('<html><head></head><body>\
                <form method="POST" enctype="multipart/form-data">\
                 <input type="file" name="filefield"><br />\
+                <input type="file" name="filefield"><br />\
+                <input type="file" name="filefield"><br />\
+                <input type="file" name="filefield"><br />\
                 <input type="submit">\
               </form>\
             </body></html>');
@@ -28,8 +31,25 @@ exports.post = function (req, res, next) {
       fileSize: MAX_FILE_SIZE
     }
   });
+  var files = [];
+  var counter = 0;
   busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    req.storeFile(file, res.doneFileDownload.bind(res));
+    if (filename) {
+      counter++;
+      req.storeFile(file, function (err, filename, mime) {
+        counter--;
+        var json = {filename: filename, mimetype: mime};
+        if (err) {
+          console.error(err.message);
+          console.error(err.stack);
+          json.error = err.message;
+        }
+        files.push(json);
+        if (counter === 0) {
+          res.json(files.length > 1 ? files : files.pop());
+        }
+      });
+    }
   });
   busboy.on('error', next);
   req.pipe(busboy);
