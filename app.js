@@ -34,6 +34,7 @@ app.get('/:file', function(req, res){
 });
 app.get('/url/:url', urlRoute.get);
 app.get('/stat/:file', statRoute.get);
+app.post('/stat', statRoute.post);
 app.get('/:size/:file', resizeRoute.get);
 //TODO: resizing app.get('/:width-:height/:modifier', resizeRoute.get);
 app.all('*', function(req, res, next){
