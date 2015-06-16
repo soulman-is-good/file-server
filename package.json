@@ -1,6 +1,6 @@
 {
   "name": "file-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Nodejs file server for file uploading/manipulation",
   "main": "app.js",
   "scripts": {

@@ -10,8 +10,11 @@ var express = require('express'),
   urlRoute = require('./routes/url'),
   statRoute = require('./routes/stat'),
   resizeRoute = require('./routes/resize'),
+  host = (process.env.FSRV_HOST || '0.0.0.0:7071').split(':'),
+  port = parseInt(host[1]) || 7071,
   fileHelper = require('./lib/fileserver');
 
+host = host[0] || '0.0.0.0';
 /** Limit values **/
 global.UPLOAD_DIR = process.env.FSRV_UPLOAD_DIR || path.join(__dirname, './uploads');
 
@@ -55,7 +58,7 @@ app.use(function (err, req, res, next) {
   next();
 });
 
-var server = app.listen(7071, function () {
+var server = app.listen(port, host, function () {
 
   var address = server.address().address;
   var port = server.address().port;
