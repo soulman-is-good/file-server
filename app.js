@@ -19,6 +19,15 @@ host = host[0] || '0.0.0.0';
 global.UPLOAD_DIR = process.env.FSRV_UPLOAD_DIR || path.join(__dirname, './uploads');
 
 app.disable('x-powered-by');
+//if server is key-secured - check to proceed
+app.use(function(req, res, next){
+  if(!process.env.FSRV_SECURITY_KEY || process.env.FSRV_SECURITY_KEY === req.headers['x-security-key']) {
+    next();
+  } else {
+    res.status(403);
+    res.end("Forbidden");
+  }
+});
 app.use(fileHelper());
 
 app.get('/', indexRoute.get);
