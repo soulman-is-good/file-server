@@ -4,6 +4,7 @@ File server
 Simple file server for storing and serving files.
 
 *WARNING* UNIX based function is used in the code!
+You will need imagemagick to be able to after-process uploaded images
 
 ```bash
 git clone git@...
