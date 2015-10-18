@@ -71,7 +71,7 @@ exports.post = function (req, res, next) {
                  <input type="submit">\
                </form><hr/>');
                 for(var i in files) {
-                  res.write('<input readonly="true" type="text" value="http://fs.backpack.kz/'+files[i].filename+'" /><br/>');
+                  res.write('<input readonly="true" style="width:100%" onclick="select()" type="text" value="http://fs.backpack.kz/'+files[i].filename+'" /><br/>');
                   res.write('<img alt="image" src="http://fs.backpack.kz/'+files[i].filename+'" /><hr/>');
                 }
                 res.end('</body></html>');
