@@ -60,7 +60,22 @@ exports.post = function (req, res, next) {
             }
             files.push(json);
             if (counter === 0) {
-              res.json(files.length > 1 ? files : files.pop());
+              if(req.xhr) {
+                res.json(files.length > 1 ? files : files.pop());
+              } else {
+                res.write('<html><head></head><body><form method="POST" enctype="multipart/form-data">\
+                 <input type="file" name="filefield"><br />\
+                 <input type="file" name="filefield"><br />\
+                 <input type="file" name="filefield"><br />\
+                 <input type="file" name="filefield"><br />\
+                 <input type="submit">\
+               </form><hr/>');
+                for(var i in files) {
+                  res.write('<input readonly="true" style="width:100%" onclick="select()" type="text" value="http://fs.backpack.kz/800x1000/'+files[i].filename+'" /><br/>');
+                  res.write('<img alt="image" src="http://fs.backpack.kz/800x1000/'+files[i].filename+'" /><hr/>');
+                }
+                res.end('</body></html>');
+              }
             }
           });
         }
