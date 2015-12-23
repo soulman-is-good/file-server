@@ -50,9 +50,9 @@ exports.post = function (req, res, next) {
       busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
         if (filename) {
           counter++;
-          req.storeFile(file, function (err, filename, mime) {
+          req.storeFile(file, function (err, filename, mime, size) {
             counter--;
-            var json = {filename: filename, mimetype: mime};
+            var json = {filename: filename, mimetype: mime, filesize: size};
             if (err) {
               console.error(err.message);
               console.error(err.stack);
